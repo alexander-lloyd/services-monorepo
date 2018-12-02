@@ -26,7 +26,7 @@ class ConfigDAOTest {
     public static class ContextConfiguration {
         @Bean
         public ConfigDAO storeDAO() {
-            return new StoreDAOImpl();
+            return new ConfigDAOImpl();
         }
     }
 
@@ -74,5 +74,11 @@ class ConfigDAOTest {
         storeDAO.createConfig(STORE_NAME);
 
         assertThrows(ConfigAlreadyExistsException.class, () -> storeDAO.createConfig(STORE_NAME));
+    }
+
+    @Test
+    @DisplayName("should throw NullPointerException if null configName")
+    void testNullConfigName() {
+        assertThrows(NullPointerException.class, () -> storeDAO.createConfig(null));
     }
 }

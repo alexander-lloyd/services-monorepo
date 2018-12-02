@@ -10,7 +10,7 @@ public interface ConfigDAO {
     /**
      * Create a new Config inside the Storage.
      *
-     * @param configName The name of the Config.
+     * @param configName The name of the Config. Must be unique.
      * @throws ConfigAlreadyExistsException if a config with the same name already exists.
      */
     void createConfig(String configName) throws ConfigAlreadyExistsException;

@@ -12,17 +12,22 @@ import java.util.Map;
  * Access Configs stored in Memory.
  */
 @Repository
-public class StoreDAOImpl implements ConfigDAO {
+public class ConfigDAOImpl implements ConfigDAO {
     // TODO: Use persistent storage.
     private Map<String, Config> configMap = new HashMap<>();
 
     /**
      * Create a new Config inside the Storage.
      *
-     * @param configName The name of the Config.
+     * @param configName The name of the Config. Must be unique.
      * @throws ConfigAlreadyExistsException if a config with the same name already exists.
+     * @throws NullPointerException         if configName is null.
      */
     public void createConfig(String configName) throws ConfigAlreadyExistsException {
+        if (configName == null) {
+            throw new NullPointerException("Config name is null");
+        }
+
         if (this.configMap.containsKey(configName)) {
             throw new ConfigAlreadyExistsException();
         }
