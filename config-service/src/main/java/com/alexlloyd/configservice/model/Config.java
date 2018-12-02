@@ -1,16 +1,16 @@
 package com.alexlloyd.configservice.model;
 
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 public class Config {
-    private Map<String, String> config;
+    private Map<String, String> configMap;
 
     /**
      * Constructor.
      */
     public Config() {
-        this.config = Collections.emptyMap();
+        this.configMap = new HashMap<>();
     }
 
     /**
@@ -18,7 +18,7 @@ public class Config {
      * @param config create a Config from an existing Map.
      */
     public Config(Map<String, String> config) {
-        this.config = config;
+        this.configMap = config;
     }
 
     /**
@@ -26,7 +26,7 @@ public class Config {
      * @return The config map.
      */
     public Map<String, String> getConfigMap() {
-        return this.config;
+        return this.configMap;
     }
 
     /**
@@ -35,7 +35,7 @@ public class Config {
      * @param value the value.
      */
     public void addConfig(String key, String value) {
-        this.config.put(key, value);
+        this.configMap.put(key, value);
     }
 
     /**
@@ -44,6 +44,6 @@ public class Config {
      * @return The value.
      */
     public String getValue(String key) {
-        return this.config.get(key);
+        return this.configMap.get(key);
     }
 }

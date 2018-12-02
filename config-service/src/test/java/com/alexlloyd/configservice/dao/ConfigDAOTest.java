@@ -17,10 +17,10 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@ContextConfiguration(loader= AnnotationConfigContextLoader.class)
+@ContextConfiguration(loader=AnnotationConfigContextLoader.class)
 @ExtendWith(SpringExtension.class)
 class ConfigDAOTest {
-    private static final String STORE_NAME = "StoreName";
+    private static final String CONFIG_NAME = "configName";
 
     @Configuration
     public static class ContextConfiguration {
@@ -48,10 +48,10 @@ class ConfigDAOTest {
     @Test
     @DisplayName("should be able to create a store")
     void testCreateStore() throws ConfigAlreadyExistsException {
-        assertNull(storeDAO.getConfig(STORE_NAME));
+        assertNull(storeDAO.getConfig(CONFIG_NAME));
 
-        storeDAO.createConfig(STORE_NAME);
-        Config config = storeDAO.getConfig(STORE_NAME);
+        storeDAO.createConfig(CONFIG_NAME);
+        Config config = storeDAO.getConfig(CONFIG_NAME);
 
         assertNotNull(config);
     }
@@ -59,21 +59,21 @@ class ConfigDAOTest {
     @Test
     @DisplayName("should be able to delete a store")
     void testDeleteStore() throws ConfigAlreadyExistsException {
-        storeDAO.createConfig(STORE_NAME);
-        Config config = storeDAO.getConfig(STORE_NAME);
+        storeDAO.createConfig(CONFIG_NAME);
+        Config config = storeDAO.getConfig(CONFIG_NAME);
         assertNotNull(config);
 
-        storeDAO.deleteConfig(STORE_NAME);
+        storeDAO.deleteConfig(CONFIG_NAME);
 
-        assertNull(storeDAO.getConfig(STORE_NAME));
+        assertNull(storeDAO.getConfig(CONFIG_NAME));
     }
 
     @Test
     @DisplayName("should throw Exception if the store already exists")
     void testCreateAlreadyExistingStore() throws ConfigAlreadyExistsException {
-        storeDAO.createConfig(STORE_NAME);
+        storeDAO.createConfig(CONFIG_NAME);
 
-        assertThrows(ConfigAlreadyExistsException.class, () -> storeDAO.createConfig(STORE_NAME));
+        assertThrows(ConfigAlreadyExistsException.class, () -> storeDAO.createConfig(CONFIG_NAME));
     }
 
     @Test

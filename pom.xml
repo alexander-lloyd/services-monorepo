@@ -21,8 +21,14 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.java.source-version>11</project.java.source-version>
         <project.java.target-version>11</project.java.target-version>
+        <dir.src>src/main/java/</dir.src>
+        <dir.test>src/test/java/</dir.test>
+        <resources.src>src/main/resources</resources.src>
+        <resources.test>src/test/resources</resources.test>
         <project.version>1.0</project.version>
+
         <dep.junit.version>5.3.2</dep.junit.version>
+        <dep.mockito.version>2.23.4</dep.mockito.version>
         <dep.spring.version>5.1.2.RELEASE</dep.spring.version>
         <dep.spring-boot.version>2.1.0.RELEASE</dep.spring-boot.version>
 
@@ -48,9 +54,35 @@
             <version>${dep.junit.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- Mockito -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${dep.mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>${dep.mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
+        <sourceDirectory>${dir.src}</sourceDirectory>
+        <testSourceDirectory>${dir.test}</testSourceDirectory>
+        <resources>
+            <resource>
+                <directory>${resources.src}</directory>
+            </resource>
+        </resources>
+        <testResources>
+            <testResource>
+                <directory>${resources.src}</directory>
+            </testResource>
+        </testResources>
         <plugins>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
