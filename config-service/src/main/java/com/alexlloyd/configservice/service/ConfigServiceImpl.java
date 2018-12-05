@@ -14,6 +14,7 @@ public class ConfigServiceImpl implements ConfigService {
 
     /**
      * Constructor.
+     *
      * @param configDAO ConfigDAO implementation.
      */
     @Autowired
@@ -22,9 +23,10 @@ public class ConfigServiceImpl implements ConfigService {
     }
 
     /**
-     * Create a Config.
-     * @param configName the name of the config.
-     * @throws ConfigAlreadyExistsException If the config already exists.
+     * Create a new Config
+     *
+     * @param configName the name of the Config.
+     * @throws ConfigAlreadyExistsException if a Config with the same name already exists.
      */
     @Override
     public void createConfig(String configName) throws ConfigAlreadyExistsException {
@@ -32,9 +34,10 @@ public class ConfigServiceImpl implements ConfigService {
     }
 
     /**
-     * Get a Config object.
-     * @param configName the name of the config.
-     * @return Config object.
+     * Get a Config object from storage.
+     *
+     * @param configName the name of the Config.
+     * @return Config object if it exists or else null.
      */
     @Override
     public Config getConfig(String configName) {
@@ -42,10 +45,11 @@ public class ConfigServiceImpl implements ConfigService {
     }
 
     /**
-     * Update a value in a config.
-     * @param configName the name of the config.
-     * @param key the key in the config.
-     * @param value the value in the config.
+     * Update a Config with a key-value pair.
+     *
+     * @param configName the name of the Config.
+     * @param key        the key to update.
+     * @param value      the value.
      */
     @Override
     public void updateConfig(String configName, String key, String value) {
@@ -54,11 +58,23 @@ public class ConfigServiceImpl implements ConfigService {
     }
 
     /**
-     * Delete a config.
-     * @param configName the name of the config.
+     * Delete a Config from storage.
+     *
+     * @param configName the name of the Config.
      */
     @Override
     public void deleteConfig(String configName) {
         this.configDAO.deleteConfig(configName);
+    }
+
+    /**
+     * Delete a value from a config.
+     *
+     * @param configName the name of the config.
+     * @param key        the key to delete.
+     */
+    @Override
+    public void deleteValue(String configName, String key) {
+        this.getConfig(configName).deleteKey(key);
     }
 }
