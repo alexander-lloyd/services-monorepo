@@ -58,7 +58,7 @@ class ConfigServiceTest {
     }
 
     @Test
-    @DisplayName("Test updating a configs")
+    @DisplayName("should update a config")
     void testUpdateConfig() {
         Config config = configService.getConfig(CONFIG_NAME);
 
@@ -69,5 +69,15 @@ class ConfigServiceTest {
         String value = configService.getConfig(CONFIG_NAME).getValue(KEY);
 
         assertEquals(value, VALUE);
+    }
+
+    @Test
+    @DisplayName("should delete a value from a config")
+    void testDeleteConfig() {
+        assertEquals(VALUE, CONFIG.getValue(KEY));
+
+        configService.deleteValue(CONFIG_NAME, KEY);
+
+        assertNull(CONFIG.getValue(KEY));
     }
 }
