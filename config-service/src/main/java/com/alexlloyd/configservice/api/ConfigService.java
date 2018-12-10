@@ -1,5 +1,7 @@
 package com.alexlloyd.configservice.api;
 
+import java.util.Collection;
+
 import com.alexlloyd.configservice.exception.ConfigAlreadyExistsException;
 import com.alexlloyd.configservice.model.Config;
 
@@ -43,4 +45,11 @@ public interface ConfigService {
      * @param key        the key to delete.
      */
     void deleteValue(String configName, String key);
+
+    /**
+     * Get the name of all the config files.
+     *
+     * @return Collection of config names.
+     */
+    Collection<String> getConfigNames();
 }

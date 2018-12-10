@@ -1,5 +1,7 @@
 package com.alexlloyd.configservice.service;
 
+import java.util.Collection;
+
 import com.alexlloyd.configservice.api.ConfigDAO;
 import com.alexlloyd.configservice.api.ConfigService;
 import com.alexlloyd.configservice.exception.ConfigAlreadyExistsException;
@@ -76,5 +78,15 @@ public class ConfigServiceImpl implements ConfigService {
     @Override
     public void deleteValue(String configName, String key) {
         this.getConfig(configName).deleteKey(key);
+    }
+
+    /**
+     * Get the name of all the config files.
+     *
+     * @return Collection of config names.
+     */
+    @Override
+    public Collection<String> getConfigNames() {
+        return this.configDAO.listConfigs().keySet();
     }
 }

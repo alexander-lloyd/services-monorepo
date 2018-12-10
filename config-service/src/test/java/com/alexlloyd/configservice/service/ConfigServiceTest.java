@@ -1,5 +1,8 @@
 package com.alexlloyd.configservice.service;
 
+import java.util.Collection;
+import java.util.Collections;
+
 import com.alexlloyd.configservice.api.ConfigDAO;
 import com.alexlloyd.configservice.api.ConfigService;
 import com.alexlloyd.configservice.exception.ConfigAlreadyExistsException;
@@ -33,6 +36,8 @@ class ConfigServiceTest {
             ConfigDAO configDAO = mock(ConfigDAO.class);
 
             when(configDAO.getConfig(eq(CONFIG_NAME))).thenReturn(CONFIG);
+
+            when(configDAO.listConfigs()).thenReturn(Collections.singletonMap(CONFIG_NAME, CONFIG));
 
             return configDAO;
         }
@@ -79,5 +84,14 @@ class ConfigServiceTest {
         configService.deleteValue(CONFIG_NAME, KEY);
 
         assertNull(CONFIG.getValue(KEY));
+    }
+
+    @Test
+    @DisplayName("should get all of the config names")
+    void testGetConfigNames() {
+        Collection<String> configNames = configService.getConfigNames();
+
+        assertEquals(1, configNames.size());
+        assertTrue(configNames.contains(CONFIG_NAME));
     }
 }
