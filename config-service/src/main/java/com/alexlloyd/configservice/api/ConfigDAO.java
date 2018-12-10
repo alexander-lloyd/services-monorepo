@@ -1,5 +1,7 @@
 package com.alexlloyd.configservice.api;
 
+import java.util.Map;
+
 import com.alexlloyd.configservice.exception.ConfigAlreadyExistsException;
 import com.alexlloyd.configservice.model.Config;
 
@@ -41,4 +43,11 @@ public interface ConfigDAO {
      * Delete all of the Config objects from the Map.
      */
     void deleteAll();
+
+    /**
+     * Get all of the Config objects.
+     *
+     * @return Map of config name to Config object.
+     */
+    Map<String, Config> listConfigs();
 }

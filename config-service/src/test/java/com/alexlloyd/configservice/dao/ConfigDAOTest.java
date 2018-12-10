@@ -1,5 +1,7 @@
 package com.alexlloyd.configservice.dao;
 
+import java.util.Map;
+
 import com.alexlloyd.configservice.api.ConfigDAO;
 import com.alexlloyd.configservice.exception.ConfigAlreadyExistsException;
 import com.alexlloyd.configservice.model.Config;
@@ -25,60 +27,74 @@ class ConfigDAOTest {
     @Configuration
     public static class ContextConfiguration {
         @Bean
-        public ConfigDAO storeDAO() {
+        public ConfigDAO configDAO() {
             return new ConfigDAOImpl();
         }
     }
 
     @Autowired
-    private ConfigDAO storeDAO;
+    private ConfigDAO configDAO;
 
     @BeforeEach
     void beforeEach() {
-        assertEquals(0, storeDAO.getConfigCount());
+        assertEquals(0, configDAO.getConfigCount());
     }
 
     @AfterEach
     void afterEach() {
         // Ensure the DAO is clear after each test
-        storeDAO.deleteAll();
+        configDAO.deleteAll();
     }
 
 
     @Test
-    @DisplayName("should be able to create a store")
-    void testCreateStore() throws ConfigAlreadyExistsException {
-        assertNull(storeDAO.getConfig(CONFIG_NAME));
+    @DisplayName("should be able to create a config")
+    void testCreateConfig() throws ConfigAlreadyExistsException {
+        assertNull(configDAO.getConfig(CONFIG_NAME));
 
-        storeDAO.createConfig(CONFIG_NAME);
-        Config config = storeDAO.getConfig(CONFIG_NAME);
+        configDAO.createConfig(CONFIG_NAME);
+        Config config = configDAO.getConfig(CONFIG_NAME);
 
         assertNotNull(config);
     }
 
     @Test
-    @DisplayName("should be able to delete a store")
-    void testDeleteStore() throws ConfigAlreadyExistsException {
-        storeDAO.createConfig(CONFIG_NAME);
-        Config config = storeDAO.getConfig(CONFIG_NAME);
+    @DisplayName("should be able to delete a config")
+    void testDeleteConfig() throws ConfigAlreadyExistsException {
+        configDAO.createConfig(CONFIG_NAME);
+        Config config = configDAO.getConfig(CONFIG_NAME);
         assertNotNull(config);
 
-        storeDAO.deleteConfig(CONFIG_NAME);
+        configDAO.deleteConfig(CONFIG_NAME);
 
-        assertNull(storeDAO.getConfig(CONFIG_NAME));
+        assertNull(configDAO.getConfig(CONFIG_NAME));
     }
 
     @Test
-    @DisplayName("should throw Exception if the store already exists")
-    void testCreateAlreadyExistingStore() throws ConfigAlreadyExistsException {
-        storeDAO.createConfig(CONFIG_NAME);
+    @DisplayName("should throw Exception if the config already exists")
+    void testCreateAlreadyExistingConfig() throws ConfigAlreadyExistsException {
+        configDAO.createConfig(CONFIG_NAME);
 
-        assertThrows(ConfigAlreadyExistsException.class, () -> storeDAO.createConfig(CONFIG_NAME));
+        assertThrows(ConfigAlreadyExistsException.class, () -> configDAO.createConfig(CONFIG_NAME));
     }
 
     @Test
     @DisplayName("should throw NullPointerException if null configName")
     void testNullConfigName() {
-        assertThrows(NullPointerException.class, () -> storeDAO.createConfig(null));
+        assertThrows(NullPointerException.class, () -> configDAO.createConfig(null));
+    }
+
+    @Test
+    @DisplayName("should return all configs")
+    void testListConfigs() throws ConfigAlreadyExistsException {
+        Map<String, Config> configs = configDAO.listConfigs();
+
+        assertEquals(0, configs.size());
+
+        configDAO.createConfig(CONFIG_NAME);
+
+        configs = configDAO.listConfigs();
+
+        assertEquals(1, configs.size());
     }
 }

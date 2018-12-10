@@ -70,4 +70,14 @@ public class ConfigDAOImpl implements ConfigDAO {
     public void deleteAll() {
         this.configMap.clear();
     }
+
+    /**
+     * Get all of the Config objects.
+     *
+     * @return Map of config name to Config object.
+     */
+    @Override
+    public Map<String, Config> listConfigs() {
+        return this.configMap;
+    }
 }
