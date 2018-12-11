@@ -9,6 +9,7 @@ import com.alexlloyd.configservice.model.Config;
 import com.alexlloyd.configservice.model.DataWrapper;
 import com.alexlloyd.configservice.model.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -91,11 +92,13 @@ public class ConfigController {
      * @param value      the value.
      */
     @PatchMapping("/{configName}")
-    public void updateConfig(
+    public Response<String> updateConfig(
             @PathVariable("configName") String configName,
             @RequestParam("key") String key,
             @RequestParam("value") String value) throws ConfigDoesNotExistException {
         this.configService.updateConfig(configName, key, value);
+
+        return Response.success("Update config " + configName);
     }
 
     /**
@@ -140,6 +143,7 @@ public class ConfigController {
      * @return Error response back to the user with the exception.
      */
     @ExceptionHandler(value = ConfigDoesNotExistException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public Response handleConfigDoesNotExistException(ConfigDoesNotExistException exception) {
         return Response.error(exception);
     }

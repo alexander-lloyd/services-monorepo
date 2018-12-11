@@ -4,6 +4,7 @@ import java.util.Collections;
 
 import com.alexlloyd.configservice.api.ConfigService;
 import com.alexlloyd.configservice.exception.ConfigAlreadyExistsException;
+import com.alexlloyd.configservice.exception.ConfigDoesNotExistException;
 import com.alexlloyd.configservice.model.Config;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -90,9 +92,25 @@ class ConfigControllerTest {
     }
 
     @Test
+    @DisplayName("should return error if config does not exist")
+    void testGetConfigException() throws Exception {
+        when(configService.getConfig(eq(CONFIG_NAME))).thenThrow(new ConfigDoesNotExistException(CONFIG_NAME));
+
+        mockMvc.perform(get("/config/{configName}", CONFIG_NAME))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.response", is("ERROR")))
+                .andExpect(jsonPath("$.errors").isArray())
+                .andExpect(jsonPath("$.errors", hasSize(1)))
+                .andExpect(jsonPath("$.errors[0].reason", containsString(CONFIG_NAME)))
+                .andExpect(jsonPath("$.data").doesNotExist());
+    }
+
+    @Test
     @DisplayName("should create a config")
     void testCreateConfig() throws Exception {
-        mockMvc.perform(post("/config/" + CONFIG_NAME))
+        mockMvc.perform(post("/config/{configName}", CONFIG_NAME))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -110,7 +128,7 @@ class ConfigControllerTest {
     void testCreateConfigError() throws Exception {
         doThrow(new ConfigAlreadyExistsException(CONFIG_NAME)).when(configService).createConfig(eq(CONFIG_NAME));
 
-        mockMvc.perform(post("/config/" + CONFIG_NAME))
+        mockMvc.perform(post("/config/{configName}", CONFIG_NAME))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -119,5 +137,17 @@ class ConfigControllerTest {
                 .andExpect(jsonPath("$.errors", hasSize(1)))
                 .andExpect(jsonPath("$.errors[0].reason", containsString("exists")))
                 .andExpect(jsonPath("$.data").doesNotExist());
+    }
+
+    @Test
+    @DisplayName("should update a config")
+    void testUpdateConfig() throws Exception {
+        mockMvc.perform(patch("/config/{configName}?key={key}&value={value}", CONFIG_NAME, KEY, VALUE))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.response", is("SUCCESS")))
+                .andExpect(jsonPath("$.errors").doesNotExist())
+                .andExpect(jsonPath("$.data", containsString("Update")));
     }
 }
