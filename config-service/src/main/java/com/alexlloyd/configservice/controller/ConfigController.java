@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import com.alexlloyd.configservice.api.ConfigService;
 import com.alexlloyd.configservice.exception.ConfigAlreadyExistsException;
+import com.alexlloyd.configservice.exception.ConfigDoesNotExistException;
 import com.alexlloyd.configservice.model.Config;
 import com.alexlloyd.configservice.model.DataWrapper;
 import com.alexlloyd.configservice.model.Response;
@@ -46,7 +47,7 @@ public class ConfigController {
      * @return Config Response
      */
     @GetMapping(value = "/{configName}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Response<DataWrapper<Config>> getConfig(@PathVariable("configName") String configName) {
+    public Response<DataWrapper<Config>> getConfig(@PathVariable("configName") String configName) throws ConfigDoesNotExistException {
         Config config = this.configService.getConfig(configName);
 
         return Response.success(new DataWrapper<>(config));
@@ -62,7 +63,7 @@ public class ConfigController {
     @GetMapping(value = "/{configName}/{key}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Response<String> getValue(
             @PathVariable("configName") String configName,
-            @PathVariable("key") String key) {
+            @PathVariable("key") String key) throws ConfigDoesNotExistException {
 
         String value = configService.getConfig(configName).getValue(key);
 
@@ -93,7 +94,7 @@ public class ConfigController {
     public void updateConfig(
             @PathVariable("configName") String configName,
             @RequestParam("key") String key,
-            @RequestParam("value") String value) {
+            @RequestParam("value") String value) throws ConfigDoesNotExistException {
         this.configService.updateConfig(configName, key, value);
     }
 
@@ -104,7 +105,7 @@ public class ConfigController {
      */
     @DeleteMapping("/{configName}")
     public void deleteConfig(
-            @PathVariable("configName") String configName) {
+            @PathVariable("configName") String configName) throws ConfigDoesNotExistException {
         this.configService.deleteConfig(configName);
     }
 
@@ -117,12 +118,29 @@ public class ConfigController {
     @DeleteMapping("/{configName}/{key}")
     public void deleteValue(
             @PathVariable("configName") String configName,
-            @PathVariable("key") String key) {
+            @PathVariable("key") String key) throws ConfigDoesNotExistException {
         this.configService.deleteValue(configName, key);
     }
 
+    /**
+     * Exception handler for {@link ConfigAlreadyExistsException}
+     *
+     * @param exception instance of the exception
+     * @return Failure response back to the user with the exception.
+     */
     @ExceptionHandler(value = ConfigAlreadyExistsException.class)
     public Response handleConfigAlreadyExistsException(ConfigAlreadyExistsException exception) {
         return Response.failure(exception);
+    }
+
+    /**
+     * Exception handler for {@link ConfigDoesNotExistException}
+     *
+     * @param exception instance of the exception
+     * @return Error response back to the user with the exception.
+     */
+    @ExceptionHandler(value = ConfigDoesNotExistException.class)
+    public Response handleConfigDoesNotExistException(ConfigDoesNotExistException exception) {
+        return Response.error(exception);
     }
 }

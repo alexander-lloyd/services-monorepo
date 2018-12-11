@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.alexlloyd.configservice.api.ConfigDAO;
 import com.alexlloyd.configservice.exception.ConfigAlreadyExistsException;
+import com.alexlloyd.configservice.exception.ConfigDoesNotExistException;
 import com.alexlloyd.configservice.model.Config;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,8 +50,8 @@ class ConfigDAOTest {
 
     @Test
     @DisplayName("should be able to create a config")
-    void testCreateConfig() throws ConfigAlreadyExistsException {
-        assertNull(configDAO.getConfig(CONFIG_NAME));
+    void testCreateConfig() throws ConfigAlreadyExistsException, ConfigDoesNotExistException {
+        assertThrows(ConfigDoesNotExistException.class, () -> configDAO.getConfig(CONFIG_NAME));
 
         configDAO.createConfig(CONFIG_NAME);
         Config config = configDAO.getConfig(CONFIG_NAME);
@@ -60,14 +61,14 @@ class ConfigDAOTest {
 
     @Test
     @DisplayName("should be able to delete a config")
-    void testDeleteConfig() throws ConfigAlreadyExistsException {
+    void testDeleteConfig() throws ConfigAlreadyExistsException, ConfigDoesNotExistException {
         configDAO.createConfig(CONFIG_NAME);
         Config config = configDAO.getConfig(CONFIG_NAME);
         assertNotNull(config);
 
         configDAO.deleteConfig(CONFIG_NAME);
 
-        assertNull(configDAO.getConfig(CONFIG_NAME));
+        assertThrows(ConfigDoesNotExistException.class, () -> configDAO.getConfig(CONFIG_NAME));
     }
 
     @Test

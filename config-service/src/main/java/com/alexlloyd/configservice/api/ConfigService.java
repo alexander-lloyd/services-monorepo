@@ -3,6 +3,7 @@ package com.alexlloyd.configservice.api;
 import java.util.Collection;
 
 import com.alexlloyd.configservice.exception.ConfigAlreadyExistsException;
+import com.alexlloyd.configservice.exception.ConfigDoesNotExistException;
 import com.alexlloyd.configservice.model.Config;
 
 public interface ConfigService {
@@ -20,7 +21,7 @@ public interface ConfigService {
      * @param configName the name of the Config.
      * @return Config object if it exists or else null.
      */
-    Config getConfig(String configName);
+    Config getConfig(String configName) throws ConfigDoesNotExistException;
 
     /**
      * Update a Config with a key-value pair.
@@ -29,14 +30,14 @@ public interface ConfigService {
      * @param key        the key to update.
      * @param value      the value.
      */
-    void updateConfig(String configName, String key, String value);
+    void updateConfig(String configName, String key, String value) throws ConfigDoesNotExistException;
 
     /**
      * Delete a Config from storage.
      *
      * @param configName the name of the Config.
      */
-    void deleteConfig(String configName);
+    void deleteConfig(String configName) throws ConfigDoesNotExistException;
 
     /**
      * Delete a value from a config.
@@ -44,7 +45,7 @@ public interface ConfigService {
      * @param configName the name of the config.
      * @param key        the key to delete.
      */
-    void deleteValue(String configName, String key);
+    void deleteValue(String configName, String key) throws ConfigDoesNotExistException;
 
     /**
      * Get the name of all the config files.

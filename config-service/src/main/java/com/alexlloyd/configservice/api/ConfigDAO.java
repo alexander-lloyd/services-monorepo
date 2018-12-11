@@ -3,6 +3,7 @@ package com.alexlloyd.configservice.api;
 import java.util.Map;
 
 import com.alexlloyd.configservice.exception.ConfigAlreadyExistsException;
+import com.alexlloyd.configservice.exception.ConfigDoesNotExistException;
 import com.alexlloyd.configservice.model.Config;
 
 /**
@@ -22,7 +23,7 @@ public interface ConfigDAO {
      *
      * @param configName The name of the Config.
      */
-    void deleteConfig(String configName);
+    void deleteConfig(String configName) throws ConfigDoesNotExistException;
 
     /**
      * Get a Config object.
@@ -30,7 +31,7 @@ public interface ConfigDAO {
      * @param configName The name of the Config.
      * @return The Config object.
      */
-    Config getConfig(String configName);
+    Config getConfig(String configName) throws ConfigDoesNotExistException;
 
     /**
      * Get the number of configs in the Storage.

@@ -5,6 +5,7 @@ import java.util.Collection;
 import com.alexlloyd.configservice.api.ConfigDAO;
 import com.alexlloyd.configservice.api.ConfigService;
 import com.alexlloyd.configservice.exception.ConfigAlreadyExistsException;
+import com.alexlloyd.configservice.exception.ConfigDoesNotExistException;
 import com.alexlloyd.configservice.model.Config;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ConfigServiceImpl implements ConfigService {
+
     private ConfigDAO configDAO;
 
     /**
@@ -40,9 +42,10 @@ public class ConfigServiceImpl implements ConfigService {
      *
      * @param configName the name of the Config.
      * @return Config object if it exists or else null.
+     * @throws ConfigDoesNotExistException if the config does not exist.
      */
     @Override
-    public Config getConfig(String configName) {
+    public Config getConfig(String configName) throws ConfigDoesNotExistException {
         return this.configDAO.getConfig(configName);
     }
 
@@ -52,9 +55,10 @@ public class ConfigServiceImpl implements ConfigService {
      * @param configName the name of the Config.
      * @param key        the key to update.
      * @param value      the value.
+     * @throws ConfigDoesNotExistException if the config does not exist.
      */
     @Override
-    public void updateConfig(String configName, String key, String value) {
+    public void updateConfig(String configName, String key, String value) throws ConfigDoesNotExistException {
         Config config = this.getConfig(configName);
         config.addConfig(key, value);
     }
@@ -63,9 +67,10 @@ public class ConfigServiceImpl implements ConfigService {
      * Delete a Config from storage.
      *
      * @param configName the name of the Config.
+     * @throws ConfigDoesNotExistException if the config does not exist.
      */
     @Override
-    public void deleteConfig(String configName) {
+    public void deleteConfig(String configName) throws ConfigDoesNotExistException {
         this.configDAO.deleteConfig(configName);
     }
 
@@ -74,9 +79,10 @@ public class ConfigServiceImpl implements ConfigService {
      *
      * @param configName the name of the config.
      * @param key        the key to delete.
+     * @throws ConfigDoesNotExistException if the config does not exist.
      */
     @Override
-    public void deleteValue(String configName, String key) {
+    public void deleteValue(String configName, String key) throws ConfigDoesNotExistException {
         this.getConfig(configName).deleteKey(key);
     }
 

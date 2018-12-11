@@ -2,6 +2,7 @@ package com.alexlloyd.configservice.dao;
 
 import com.alexlloyd.configservice.api.ConfigDAO;
 import com.alexlloyd.configservice.exception.ConfigAlreadyExistsException;
+import com.alexlloyd.configservice.exception.ConfigDoesNotExistException;
 import com.alexlloyd.configservice.model.Config;
 import org.springframework.stereotype.Repository;
 
@@ -39,7 +40,10 @@ public class ConfigDAOImpl implements ConfigDAO {
      *
      * @param configName The name of the Config.
      */
-    public void deleteConfig(String configName) {
+    public void deleteConfig(String configName) throws ConfigDoesNotExistException {
+        if (!this.configMap.containsKey(configName)) {
+            throw new ConfigDoesNotExistException(configName);
+        }
         this.configMap.remove(configName);
     }
 
@@ -48,8 +52,12 @@ public class ConfigDAOImpl implements ConfigDAO {
      *
      * @param configName The name of the Config.
      * @return The Config object.
+     * @throws ConfigDoesNotExistException if the config does not exist in storage.
      */
-    public Config getConfig(String configName) {
+    public Config getConfig(String configName) throws ConfigDoesNotExistException {
+        if (!this.configMap.containsKey(configName)) {
+            throw new ConfigDoesNotExistException(configName);
+        }
         return this.configMap.get(configName);
     }
 

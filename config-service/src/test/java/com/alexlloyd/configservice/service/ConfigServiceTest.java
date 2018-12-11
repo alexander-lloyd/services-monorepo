@@ -6,6 +6,7 @@ import java.util.Collections;
 import com.alexlloyd.configservice.api.ConfigDAO;
 import com.alexlloyd.configservice.api.ConfigService;
 import com.alexlloyd.configservice.exception.ConfigAlreadyExistsException;
+import com.alexlloyd.configservice.exception.ConfigDoesNotExistException;
 import com.alexlloyd.configservice.model.Config;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,21 +30,25 @@ class ConfigServiceTest {
     private static final String KEY = "key";
     private static final String VALUE = "value";
 
+    private static final String NON_EXISTENT_CONFIG = "non-existent-config";
+
     @Configuration
     public static class ContextConfiguration {
         @Bean
-        public ConfigDAO configDAO() {
+        public ConfigDAO configDAO() throws ConfigDoesNotExistException {
             ConfigDAO configDAO = mock(ConfigDAO.class);
 
             when(configDAO.getConfig(eq(CONFIG_NAME))).thenReturn(CONFIG);
 
             when(configDAO.listConfigs()).thenReturn(Collections.singletonMap(CONFIG_NAME, CONFIG));
 
+            doThrow(ConfigDoesNotExistException.class).when(configDAO).getConfig(eq(NON_EXISTENT_CONFIG));
+
             return configDAO;
         }
 
         @Bean
-        public ConfigService configService() {
+        public ConfigService configService() throws ConfigDoesNotExistException {
             return new ConfigServiceImpl(configDAO());
         }
     }
@@ -53,7 +58,7 @@ class ConfigServiceTest {
 
     @Test
     @DisplayName("should be able to create and delete configs")
-    void testCreateConfig() throws ConfigAlreadyExistsException {
+    void testCreateConfig() throws ConfigAlreadyExistsException, ConfigDoesNotExistException {
         configService.createConfig(CONFIG_NAME);
 
         Config config = configService.getConfig(CONFIG_NAME);
@@ -64,7 +69,7 @@ class ConfigServiceTest {
 
     @Test
     @DisplayName("should update a config")
-    void testUpdateConfig() {
+    void testUpdateConfig() throws ConfigDoesNotExistException {
         Config config = configService.getConfig(CONFIG_NAME);
 
         configService.updateConfig(CONFIG_NAME, KEY, VALUE);
@@ -78,12 +83,19 @@ class ConfigServiceTest {
 
     @Test
     @DisplayName("should delete a value from a config")
-    void testDeleteConfig() {
+    void testDeleteConfig() throws ConfigDoesNotExistException {
         assertEquals(VALUE, CONFIG.getValue(KEY));
 
         configService.deleteValue(CONFIG_NAME, KEY);
 
         assertNull(CONFIG.getValue(KEY));
+    }
+
+    @Test
+    @DisplayName("should throw exception when trying to delete value from non-existent config")
+    void testDeleteConfigException() {
+
+        assertThrows(ConfigDoesNotExistException.class, () -> configService.deleteValue(NON_EXISTENT_CONFIG, KEY));
     }
 
     @Test
