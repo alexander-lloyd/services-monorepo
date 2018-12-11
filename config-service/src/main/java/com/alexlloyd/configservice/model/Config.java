@@ -3,6 +3,8 @@ package com.alexlloyd.configservice.model;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+
 public class Config {
     private Map<String, String> configMap;
 
@@ -27,6 +29,7 @@ public class Config {
      *
      * @return The config map.
      */
+    @JsonAnyGetter
     public Map<String, String> getConfigMap() {
         return this.configMap;
     }

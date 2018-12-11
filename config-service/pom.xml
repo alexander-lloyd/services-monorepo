@@ -40,6 +40,15 @@
             <version>${dep.spring-boot.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- === Testing Tools === -->
+        <!-- Hamcrest -->
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-library</artifactId>
+            <version>${dep.hamcrest.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
