@@ -78,6 +78,7 @@ public class ConfigController {
      * @throws ConfigAlreadyExistsException if a config with the same name already exists.
      */
     @PostMapping(value = "/{configName}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
     public Response<String> createConfig(@PathVariable("configName") String configName) throws ConfigAlreadyExistsException {
         this.configService.createConfig(configName);
 

@@ -144,7 +144,7 @@ class ConfigControllerTest {
     void testCreateConfig() throws Exception {
         mockMvc.perform(post("/config/{configName}", CONFIG_NAME))
                 .andDo(print())
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.response", is("SUCCESS")))
                 .andExpect(jsonPath("$.errors").doesNotExist())
