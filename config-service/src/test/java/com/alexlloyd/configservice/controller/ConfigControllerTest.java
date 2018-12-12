@@ -21,6 +21,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -108,6 +109,37 @@ class ConfigControllerTest {
     }
 
     @Test
+    @DisplayName("should get a config va;ie")
+    void testGetConfigValue() throws Exception {
+        when(configService.getConfig(eq(CONFIG_NAME))).thenReturn(CONFIG);
+
+        mockMvc.perform(get("/config/{configName}/{key}", CONFIG_NAME, KEY))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.response", is("SUCCESS")))
+                .andExpect(jsonPath("$.errors").doesNotExist())
+                .andExpect(jsonPath("$.data").isString())
+                .andExpect(jsonPath("$.data", is(VALUE)));
+    }
+
+    @Test
+    @DisplayName("should return error if config does not exist")
+    void testGetConfigValueException() throws Exception {
+        when(configService.getConfig(eq(CONFIG_NAME))).thenThrow(new ConfigDoesNotExistException(CONFIG_NAME));
+
+        mockMvc.perform(get("/config/{configName}/{key}", CONFIG_NAME, KEY))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.response", is("ERROR")))
+                .andExpect(jsonPath("$.errors").isArray())
+                .andExpect(jsonPath("$.errors", hasSize(1)))
+                .andExpect(jsonPath("$.errors[0].reason", containsString(CONFIG_NAME)))
+                .andExpect(jsonPath("$.data").doesNotExist());
+    }
+
+    @Test
     @DisplayName("should create a config")
     void testCreateConfig() throws Exception {
         mockMvc.perform(post("/config/{configName}", CONFIG_NAME))
@@ -130,7 +162,7 @@ class ConfigControllerTest {
 
         mockMvc.perform(post("/config/{configName}", CONFIG_NAME))
                 .andDo(print())
-                .andExpect(status().isOk())
+                .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.response", is("FAILURE")))
                 .andExpect(jsonPath("$.errors").isArray())
@@ -149,5 +181,71 @@ class ConfigControllerTest {
                 .andExpect(jsonPath("$.response", is("SUCCESS")))
                 .andExpect(jsonPath("$.errors").doesNotExist())
                 .andExpect(jsonPath("$.data", containsString("Update")));
+    }
+
+    @Test
+    @DisplayName("should return an error if the config already exists")
+    void testUpdateConfigException() throws Exception {
+        doThrow(new ConfigDoesNotExistException(CONFIG_NAME)).when(configService).updateConfig(eq(CONFIG_NAME), eq(KEY), eq(VALUE));
+
+        mockMvc.perform(patch("/config/{configName}?key={key}&value={value}", CONFIG_NAME, KEY, VALUE))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.response", is("ERROR")))
+                .andExpect(jsonPath("$.errors", hasSize(1)))
+                .andExpect(jsonPath("$.errors[0].reason", containsString("not exist")));
+    }
+
+    @Test
+    @DisplayName("should delete a config")
+    void testDeleteConfig() throws Exception {
+        mockMvc.perform(delete("/config/{configName}", CONFIG_NAME))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.response", is("SUCCESS")))
+                .andExpect(jsonPath("$.errors").doesNotExist())
+                .andExpect(jsonPath("$.data", containsString("successfully deleted")));
+    }
+
+    @Test
+    @DisplayName("should return an error if the config does not exists")
+    void testDeleteConfigException() throws Exception {
+        doThrow(new ConfigDoesNotExistException(CONFIG_NAME)).when(configService).deleteConfig(eq(CONFIG_NAME));
+
+        mockMvc.perform(delete("/config/{configName}", CONFIG_NAME))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.response", is("ERROR")))
+                .andExpect(jsonPath("$.errors", hasSize(1)))
+                .andExpect(jsonPath("$.errors[0].reason", containsString("not exist")));
+    }
+
+    @Test
+    @DisplayName("should delete a key from a Config")
+    void testDeleteKey() throws Exception {
+        mockMvc.perform(delete("/config/{configName}/{key}", CONFIG_NAME, KEY))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.response", is("SUCCESS")))
+                .andExpect(jsonPath("$.errors").doesNotExist())
+                .andExpect(jsonPath("$.data", containsString("successfully deleted")));
+    }
+
+    @Test
+    @DisplayName("should return an error if the config does not exists")
+    void testDeleteValueException() throws Exception {
+        doThrow(new ConfigDoesNotExistException(CONFIG_NAME)).when(configService).deleteValue(eq(CONFIG_NAME), eq(KEY));
+
+        mockMvc.perform(delete("/config/{configName}/{key}", CONFIG_NAME, KEY))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.response", is("ERROR")))
+                .andExpect(jsonPath("$.errors", hasSize(1)))
+                .andExpect(jsonPath("$.errors[0].reason", containsString("not exist")));
     }
 }

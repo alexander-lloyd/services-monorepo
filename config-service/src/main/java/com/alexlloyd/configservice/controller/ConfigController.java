@@ -107,9 +107,11 @@ public class ConfigController {
      * @param configName the name of the config.
      */
     @DeleteMapping("/{configName}")
-    public void deleteConfig(
+    public Response<String> deleteConfig(
             @PathVariable("configName") String configName) throws ConfigDoesNotExistException {
         this.configService.deleteConfig(configName);
+
+        return Response.success("Config " + configName + " successfully deleted");
     }
 
     /**
@@ -119,10 +121,12 @@ public class ConfigController {
      * @param key        the key to delete.
      */
     @DeleteMapping("/{configName}/{key}")
-    public void deleteValue(
+    public Response<String> deleteValue(
             @PathVariable("configName") String configName,
             @PathVariable("key") String key) throws ConfigDoesNotExistException {
         this.configService.deleteValue(configName, key);
+
+        return Response.success("Key" + key + " successfully deleted");
     }
 
     /**
@@ -132,6 +136,7 @@ public class ConfigController {
      * @return Failure response back to the user with the exception.
      */
     @ExceptionHandler(value = ConfigAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Response handleConfigAlreadyExistsException(ConfigAlreadyExistsException exception) {
         return Response.failure(exception);
     }
