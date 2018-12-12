@@ -72,6 +72,12 @@ class ConfigDAOTest {
     }
 
     @Test
+    @DisplayName("should throw exception if a config does not exist")
+    void testDeleteConfigThrowsException() {
+        assertThrows(ConfigDoesNotExistException.class, () -> configDAO.deleteConfig("does-not-exist"));
+    }
+
+    @Test
     @DisplayName("should throw Exception if the config already exists")
     void testCreateAlreadyExistingConfig() throws ConfigAlreadyExistsException {
         configDAO.createConfig(CONFIG_NAME);
