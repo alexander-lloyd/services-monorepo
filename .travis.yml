@@ -5,18 +5,24 @@ language: java
 jdk:
   - oraclejdk11
 
+os:
+  - linux
+
+dist:
+  - trusty
+
 addons:
   apt:
     packages:
       - oracle-java8-installer
 
 install:
-  mvn -B install -U -DskipTests=true
+  - mvn -B install -U -DskipTests=true
 
 script:
-  mvn -B verify -U
+  - mvn -B verify -U
 
-after_script:
+after_success:
   - bash <(curl -s https://codecov.io/bash)
 
 cache:
