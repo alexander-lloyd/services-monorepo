@@ -26,7 +26,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(SpringExtension.class)
 class ConfigServiceTest {
     private static final String CONFIG_NAME = "configName";
-    private static final Config CONFIG = new Config();
+    private static final Config CONFIG = new Config(CONFIG_NAME);
     private static final String KEY = "key";
     private static final String VALUE = "value";
 

@@ -32,7 +32,7 @@ public class ConfigDAOImpl implements ConfigDAO {
         if (this.configMap.containsKey(configName)) {
             throw new ConfigAlreadyExistsException(configName);
         }
-        this.configMap.put(configName, new Config());
+        this.configMap.put(configName, new Config(configName));
     }
 
     /**

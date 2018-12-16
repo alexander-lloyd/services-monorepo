@@ -35,7 +35,7 @@ class ConfigControllerTest {
     private static final String KEY = "Key";
     private static final String VALUE = "Value";
     private static final String CONFIG_NAME = "configName";
-    private static final Config CONFIG = new Config(Collections.singletonMap(KEY, VALUE));
+    private static final Config CONFIG = new Config(CONFIG_NAME, Collections.singletonMap(KEY, VALUE));
 
     @Autowired
     private MockMvc mockMvc;

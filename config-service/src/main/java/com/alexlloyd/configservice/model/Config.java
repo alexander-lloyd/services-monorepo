@@ -6,13 +6,24 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 
 public class Config {
-    private Map<String, String> configMap;
+    private final String configName;
+    private final Map<String, String> configMap;
 
     /**
      * Constructor.
      */
-    public Config() {
+    public Config(String configName) {
+        this.configName = configName;
         this.configMap = new HashMap<>();
+    }
+
+    /**
+     * Getter.
+     *
+     * @return The name of the config.
+     */
+    public String getConfigName() {
+        return this.configName;
     }
 
     /**
@@ -20,7 +31,8 @@ public class Config {
      *
      * @param config create a Config from an existing Map.
      */
-    public Config(Map<String, String> config) {
+    public Config(String configName, Map<String, String> config) {
+        this.configName = configName;
         this.configMap = config;
     }
 
