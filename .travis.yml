@@ -1,0 +1,30 @@
+sudo: false
+
+language: java
+
+jdk:
+  - oraclejdk11
+
+os:
+  - linux
+
+dist:
+  - trusty
+
+addons:
+  apt:
+    packages:
+      - oracle-java8-installer
+
+install:
+  - mvn -B install -U -DskipTests=true
+
+script:
+  - mvn -B verify -U
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+
+cache:
+  directories:
+    - $HOME/.m2
