@@ -14,7 +14,7 @@
         <dep.junit.version>5.3.2</dep.junit.version>
         <dep.mockito.version>2.23.4</dep.mockito.version>
         <dep.spring.version>5.1.2.RELEASE</dep.spring.version>
-        <dep.spring-boot.version>2.1.0.RELEASE</dep.spring-boot.version>
+        <dep.spring-boot.version>2.1.1.RELEASE</dep.spring-boot.version>
 
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.source>11</maven.compiler.source>
