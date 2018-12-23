@@ -1,5 +1,4 @@
 FROM openjdk:11
-MAINTAINER Alexander Lloyd
 
 VOLUME /tmp
 ARG JAR_FILE
