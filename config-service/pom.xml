@@ -108,7 +108,6 @@
                 <directory>src/test/resources</directory>
             </testResource>
         </testResources>
-        <finalName>${project.artifactId}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -175,13 +174,16 @@
                 <configuration>
                     <repository>${docker.image.prefix}/${project.artifactId}</repository>
                     <tag>${project.version}</tag>
+                    <buildArgs>
+                        <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
+                    </buildArgs>
                 </configuration>
                 <executions>
                     <execution>
                         <goals>
                             <goal>build</goal>
                         </goals>
-                        <phase>install</phase>
+                        <id>default</id>
                     </execution>
                 </executions>
             </plugin>
