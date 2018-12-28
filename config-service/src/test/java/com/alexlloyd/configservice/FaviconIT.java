@@ -1,4 +1,4 @@
-package com.alexlloyd.configservice.controller;
+package com.alexlloyd.configservice;
 
 import com.alexlloyd.configservice.ConfigServiceApplication;
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = ConfigServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-class FaviconTest {
+class FaviconIT {
     private static final String FAVICON_URL = "/favicon.ico";
 
     @Autowired
