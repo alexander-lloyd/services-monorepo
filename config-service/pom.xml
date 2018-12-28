@@ -15,6 +15,7 @@
         <dep.mockito.version>2.23.4</dep.mockito.version>
         <dep.spring.version>5.1.3.RELEASE</dep.spring.version>
         <dep.spring-boot.version>2.1.1.RELEASE</dep.spring-boot.version>
+        <dep.spring-data.version>1.0.3.RELEASE</dep.spring-data.version>
 
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.source>11</maven.compiler.source>
@@ -35,6 +36,26 @@
     </dependencyManagement>
 
     <dependencies>
+
+        <!-- Redis -->
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>2.9.0</version>
+        </dependency>
+        <dependency>
+            <groupId>biz.paluch.redis</groupId>
+            <artifactId>lettuce</artifactId>
+            <version>5.0.0.Beta1</version>
+        </dependency>
+
+        <!-- Apache Commons -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.4.1</version>
+        </dependency>
+
         <!-- Spring -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -58,6 +79,11 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <version>${dep.spring-boot.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <version>${dep.spring-boot.version}</version>
         </dependency>
 
         <!-- === Testing Tools === -->
