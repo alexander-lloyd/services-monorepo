@@ -36,6 +36,12 @@ class ConfigServiceTest {
     private static final String NOT_EXISTENT_CONFIG = "non-existent-config";
     private static final String ALREADY_EXISTS_CONFIG = "config-exists";
 
+    @Autowired
+    private ConfigDAO configDAO;
+
+    @Autowired
+    private ConfigService configService;
+
     @Configuration
     public static class ContextConfiguration {
         @Bean
@@ -57,12 +63,6 @@ class ConfigServiceTest {
             return new ConfigServiceImpl(configDAO());
         }
     }
-
-    @Autowired
-    private ConfigDAO configDAO;
-
-    @Autowired
-    private ConfigService configService;
 
     @BeforeEach
     public void beforeEach() {

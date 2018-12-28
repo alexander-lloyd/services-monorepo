@@ -32,7 +32,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -45,6 +44,18 @@ class ConfigDAOTest {
     private static final String SECOND_CONFIG_NAME = "secondConfig";
     private static final String KEY = "key";
     private static final String VALUE = "value";
+
+    @Autowired
+    private ConfigDAO configDAO;
+
+    @Autowired
+    private StringRedisTemplate redisTemplate;
+
+    @Autowired
+    private HashOperations hashOperations;
+
+    @Autowired
+    private ZSetOperations zSetOperations;
 
     @Configuration
     public static class ContextConfiguration {
@@ -73,18 +84,6 @@ class ConfigDAOTest {
             return mock(ZSetOperations.class);
         }
     }
-
-    @Autowired
-    private ConfigDAO configDAO;
-
-    @Autowired
-    private StringRedisTemplate redisTemplate;
-
-    @Autowired
-    private HashOperations hashOperations;
-
-    @Autowired
-    private ZSetOperations zSetOperations;
 
     @BeforeEach
     public void beforeEach() {
