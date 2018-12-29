@@ -9,19 +9,13 @@ os:
   - linux
 
 dist:
-  - trusty
-
-addons:
-  apt:
-    packages:
-      - oracle-java8-installer
-
-install:
-  - mvn -B install -U -DskipTests=true
+  trusty
 
 script:
-  - mvn -B verify -U
+  - mvn -B install -U
   - bash <(curl -s https://codecov.io/bash) -c -F unittests
+  - mvn -B verify -U -DskipIntegrationTests=false -Ddockerfile.skip -Dskip.surefire.tests
+  - bash <(curl -s https://codecov.io/bash) -c -F integration
 
 cache:
   directories:
