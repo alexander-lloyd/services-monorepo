@@ -1,6 +1,7 @@
 package com.alexlloyd.configservice.dao;
 
 import com.alexlloyd.configservice.api.ConfigDAO;
+import com.alexlloyd.configservice.exception.InvalidConfigNameException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -73,7 +74,7 @@ public class ConfigDAOImpl implements ConfigDAO {
     @Override
     public void createConfig(String configName) {
         if (configName == null) {
-            throw new NullPointerException("configName is null");
+            throw new InvalidConfigNameException();
         }
 
         String redisKey = buildKey(configName);

@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.alexlloyd.configservice.api.ConfigDAO;
+import com.alexlloyd.configservice.exception.InvalidConfigNameException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -131,7 +132,7 @@ class ConfigDAOTest {
     @DisplayName("should throw null pointer if configName is null")
     @Test()
     public void testCreateConfigNull() {
-        assertThrows(NullPointerException.class, () -> configDAO.createConfig(null));
+        assertThrows(InvalidConfigNameException.class, () -> configDAO.createConfig(null));
     }
 
     @DisplayName("should be able to delete a config")
@@ -177,8 +178,6 @@ class ConfigDAOTest {
         when(zSetOperations.range(eq(DOMAIN_KEY), eq(0L), eq(-1L))).thenReturn(Set.of(CONFIG_NAME, SECOND_CONFIG_NAME));
 
         configDAO.deleteAll();
-
-        verify(zSetOperations).range(eq(DOMAIN_KEY), eq(Long.MIN_VALUE), eq(Long.MAX_VALUE));
 
         verify(zSetOperations).range(eq(DOMAIN_KEY), eq(Long.MIN_VALUE), eq(Long.MAX_VALUE));
     }

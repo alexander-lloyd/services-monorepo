@@ -7,6 +7,7 @@ import com.alexlloyd.configservice.api.ConfigDAO;
 import com.alexlloyd.configservice.api.ConfigService;
 import com.alexlloyd.configservice.exception.ConfigAlreadyExistsException;
 import com.alexlloyd.configservice.exception.ConfigDoesNotExistException;
+import com.alexlloyd.configservice.exception.InvalidConfigNameException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -72,7 +73,7 @@ class ConfigServiceTest {
     @DisplayName("should thrown null pointer if configName is null")
     @Test
     public void testCreateConfigNull() {
-        assertThrows(NullPointerException.class, () -> configService.createConfig(null));
+        assertThrows(InvalidConfigNameException.class, () -> configService.createConfig(null));
     }
 
     @DisplayName("should be able to create and delete configs")

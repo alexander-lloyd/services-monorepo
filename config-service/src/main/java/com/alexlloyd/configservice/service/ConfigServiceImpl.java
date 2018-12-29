@@ -7,6 +7,7 @@ import com.alexlloyd.configservice.api.ConfigDAO;
 import com.alexlloyd.configservice.api.ConfigService;
 import com.alexlloyd.configservice.exception.ConfigAlreadyExistsException;
 import com.alexlloyd.configservice.exception.ConfigDoesNotExistException;
+import com.alexlloyd.configservice.exception.InvalidConfigNameException;
 import com.alexlloyd.configservice.model.Config;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ public class ConfigServiceImpl implements ConfigService {
     @Override
     public void createConfig(String configName) throws ConfigAlreadyExistsException {
         if (configName == null) {
-            throw new NullPointerException("Config name is null");
+            throw new InvalidConfigNameException();
         }
 
         if (this.configDAO.hasConfig(configName)) {
