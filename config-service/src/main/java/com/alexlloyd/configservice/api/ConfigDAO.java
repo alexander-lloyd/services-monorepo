@@ -1,29 +1,27 @@
 package com.alexlloyd.configservice.api;
 
+import java.util.Collection;
 import java.util.Map;
-
-import com.alexlloyd.configservice.exception.ConfigAlreadyExistsException;
-import com.alexlloyd.configservice.exception.ConfigDoesNotExistException;
-import com.alexlloyd.configservice.model.Config;
 
 /**
  * Access Configs from the Storage.
  */
 public interface ConfigDAO {
+    boolean hasConfig(String configName);
+
     /**
      * Create a new Config inside the Storage.
      *
      * @param configName The name of the Config. Must be unique.
-     * @throws ConfigAlreadyExistsException if a config with the same name already exists.
      */
-    void createConfig(String configName) throws ConfigAlreadyExistsException;
+    void createConfig(String configName);
 
     /**
      * Delete a config from the Storage.
      *
      * @param configName The name of the Config.
      */
-    void deleteConfig(String configName) throws ConfigDoesNotExistException;
+    void deleteConfig(String configName);
 
     /**
      * Get a Config object.
@@ -31,7 +29,7 @@ public interface ConfigDAO {
      * @param configName The name of the Config.
      * @return The Config object.
      */
-    Config getConfig(String configName) throws ConfigDoesNotExistException;
+    Map<String, String> getConfigMap(String configName);
 
     /**
      * Get the number of configs in the Storage.
@@ -50,5 +48,22 @@ public interface ConfigDAO {
      *
      * @return Map of config name to Config object.
      */
-    Map<String, Config> listConfigs();
+    Collection<String> listConfigs();
+
+    /**
+     * Delete a value from a config.
+     *
+     * @param configName The name of the config.
+     * @param key The key to delete.
+     */
+    void deleteValue(String configName, String key);
+
+    /**
+     * Update a value from the config.
+     *
+     * @param configName The name of the config.
+     * @param key The key to update.
+     * @param value The new value.
+     */
+    void updateConfig(String configName, String key, String value);
 }

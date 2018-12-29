@@ -1,11 +1,13 @@
 package com.alexlloyd.configservice.service;
 
 import java.util.Collection;
+import java.util.Map;
 
 import com.alexlloyd.configservice.api.ConfigDAO;
 import com.alexlloyd.configservice.api.ConfigService;
 import com.alexlloyd.configservice.exception.ConfigAlreadyExistsException;
 import com.alexlloyd.configservice.exception.ConfigDoesNotExistException;
+import com.alexlloyd.configservice.exception.InvalidConfigNameException;
 import com.alexlloyd.configservice.model.Config;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,14 @@ public class ConfigServiceImpl implements ConfigService {
      */
     @Override
     public void createConfig(String configName) throws ConfigAlreadyExistsException {
+        if (configName == null) {
+            throw new InvalidConfigNameException();
+        }
+
+        if (this.configDAO.hasConfig(configName)) {
+            throw new ConfigAlreadyExistsException(configName);
+        }
+
         this.configDAO.createConfig(configName);
     }
 
@@ -46,7 +56,13 @@ public class ConfigServiceImpl implements ConfigService {
      */
     @Override
     public Config getConfig(String configName) throws ConfigDoesNotExistException {
-        return this.configDAO.getConfig(configName);
+        if (!this.configDAO.hasConfig(configName)) {
+            throw new ConfigDoesNotExistException(configName);
+        }
+
+        Map<String, String> configMap = this.configDAO.getConfigMap(configName);
+
+        return new Config(configMap);
     }
 
     /**
@@ -59,8 +75,10 @@ public class ConfigServiceImpl implements ConfigService {
      */
     @Override
     public void updateConfig(String configName, String key, String value) throws ConfigDoesNotExistException {
-        Config config = this.getConfig(configName);
-        config.addConfig(key, value);
+        if (!this.configDAO.hasConfig(configName)) {
+            throw new ConfigDoesNotExistException(configName);
+        }
+        this.configDAO.updateConfig(configName, key, value);
     }
 
     /**
@@ -71,6 +89,9 @@ public class ConfigServiceImpl implements ConfigService {
      */
     @Override
     public void deleteConfig(String configName) throws ConfigDoesNotExistException {
+        if (!this.configDAO.hasConfig(configName)) {
+            throw new ConfigDoesNotExistException(configName);
+        }
         this.configDAO.deleteConfig(configName);
     }
 
@@ -83,7 +104,11 @@ public class ConfigServiceImpl implements ConfigService {
      */
     @Override
     public void deleteValue(String configName, String key) throws ConfigDoesNotExistException {
-        this.getConfig(configName).deleteKey(key);
+        if (!this.configDAO.hasConfig(configName)) {
+            throw new ConfigDoesNotExistException(configName);
+        }
+
+        this.configDAO.deleteValue(configName, key);
     }
 
     /**
@@ -93,6 +118,6 @@ public class ConfigServiceImpl implements ConfigService {
      */
     @Override
     public Collection<String> getConfigNames() {
-        return this.configDAO.listConfigs().keySet();
+        return this.configDAO.listConfigs();
     }
 }

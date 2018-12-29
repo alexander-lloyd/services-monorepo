@@ -15,9 +15,9 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include;
  */
 @JsonInclude(value = Include.NON_NULL)
 public class Response<T> {
-    private ResponseType type;
-    private T data;
-    private Collection<Exception> errors;
+    private final ResponseType type;
+    private final T data;
+    private final Collection<Exception> errors;
 
     /**
      * Constructor.

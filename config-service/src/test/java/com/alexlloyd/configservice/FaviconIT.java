@@ -1,13 +1,16 @@
-package com.alexlloyd.configservice.controller;
+package com.alexlloyd.configservice;
 
-import com.alexlloyd.configservice.ConfigServiceApplication;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.util.TestPropertyValues;
+import org.springframework.context.ApplicationContextInitializer;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -17,10 +20,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@AutoConfigureMockMvc
+@ContextConfiguration(
+        initializers = {FaviconIT.Initializer.class}
+)
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = ConfigServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
-@AutoConfigureMockMvc
-class FaviconTest {
+class FaviconIT {
     private static final String FAVICON_URL = "/favicon.ico";
 
     @Autowired
@@ -36,5 +42,16 @@ class FaviconTest {
                 .getResponse();
 
         assertThat(response.getContentAsString(), isEmptyString());
+    }
+
+    public static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+
+        public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
+            TestPropertyValues values = TestPropertyValues.of(
+                    "spring.redis.host=example.com",
+                    "spring.redis.port=10000",
+                    "spring.redis.password=");
+            values.applyTo(configurableApplicationContext);
+        }
     }
 }
