@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 @ContextConfiguration(
-        initializers = {ConfigServiceIT.Initializer.class}
+        initializers = {FaviconIT.Initializer.class}
 )
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = ConfigServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -48,8 +48,8 @@ class FaviconIT {
 
         public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
             TestPropertyValues values = TestPropertyValues.of(
-                    "spring.redis.host=",
-                    "spring.redis.port=",
+                    "spring.redis.host=example.com",
+                    "spring.redis.port=10000",
                     "spring.redis.password=");
             values.applyTo(configurableApplicationContext);
         }
