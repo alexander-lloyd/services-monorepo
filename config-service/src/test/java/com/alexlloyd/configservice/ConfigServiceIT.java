@@ -18,21 +18,31 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.context.ApplicationContextInitializer;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriTemplate;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @AutoConfigureMockMvc
-@ExtendWith(SpringExtension.class)
+@ContextConfiguration(initializers = ConfigServiceIT.Initializer.class)
+@ExtendWith({SpringExtension.class})
+@Testcontainers
 @SpringBootTest(
         classes = ConfigServiceApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -40,6 +50,18 @@ class ConfigServiceIT {
     private static final String KEY = "Config-Key";
     private static final String VALUE = "Config-Value";
     private static final String CONFIG_NAME = "config-name";
+    private static RestTemplate restTemplate;
+
+    @Container
+    private static final GenericContainer redis = new GenericContainer("redis:3.0.6")
+            .withExposedPorts(6379)
+            .waitingFor(Wait.defaultWaitStrategy());
+
+    static {
+        System.setProperty("io.netty.noUnsafe", "true");
+        redis.start();
+    }
+
 
     @Autowired
     private ConfigService configService;
@@ -50,17 +72,17 @@ class ConfigServiceIT {
     @LocalServerPort
     private int port;
 
-    private static RestTemplate restTemplate;
-
     @BeforeAll
     public static void beforeAll() {
-        restTemplate  = new RestTemplate();
+        restTemplate = new RestTemplate();
         HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
         restTemplate.setRequestFactory(requestFactory);
     }
 
     @BeforeEach
     public void beforeEach() throws ConfigAlreadyExistsException, ConfigDoesNotExistException {
+        assertTrue(redis.isRunning());
+
         this.configDAO.deleteAll();
         this.configService.createConfig(CONFIG_NAME);
         this.configService.updateConfig(CONFIG_NAME, KEY, VALUE);
@@ -190,5 +212,17 @@ class ConfigServiceIT {
         restTemplate.delete(url);
 
         assertEquals(0, this.configService.getConfig(CONFIG_NAME).getConfigMap().size());
+    }
+
+    public static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+        @Override
+        public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
+            TestPropertyValues values = TestPropertyValues.of(
+                    "spring.redis.host=" + redis.getContainerIpAddress(),
+                    "spring.redis.port=" + redis.getMappedPort(6379),
+                    "spring.redis.password="
+            );
+            values.applyTo(configurableApplicationContext);
+        }
     }
 }
