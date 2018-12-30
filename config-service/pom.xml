@@ -16,7 +16,7 @@
         <dep.spring-data.version>1.0.3.RELEASE</dep.spring-data.version>
         <dep.testcontainers.version>1.10.3</dep.testcontainers.version>
 
-        <docker.image.prefix>alexlloyd.com</docker.image.prefix>
+        <docker.image.prefix>alexanderlloyd</docker.image.prefix>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
