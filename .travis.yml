@@ -11,11 +11,22 @@ os:
 dist:
   trusty
 
+before_script:
+  - docker login -u "$DOCKER_HUB_USERNAME" -p "$DOCKER_HUB_PASSWORD"
+
 script:
   - mvn -B install -U
   - bash <(curl -s https://codecov.io/bash) -c -F unittests
   - mvn -B verify -U -DskipIntegrationTests=false -Ddockerfile.skip -Dskip.surefire.tests
   - bash <(curl -s https://codecov.io/bash) -c -F integration
+
+deploy:
+  provider: script
+  script:
+    cd config-service
+    mvn dockerfile:push
+  on:
+    branch: master
 
 cache:
   directories:
