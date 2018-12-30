@@ -1,19 +1,15 @@
 package com.alexlloyd.configservice.model;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
+import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
+
+@JsonAutoDetect(fieldVisibility = NONE, getterVisibility = NONE, setterVisibility = NONE)
 public class Config {
-    private Map<String, String> configMap;
-
-    /**
-     * Constructor.
-     */
-    public Config() {
-        this.configMap = new HashMap<>();
-    }
+    private final Map<String, String> configMap;
 
     /**
      * Constructor.
@@ -35,16 +31,6 @@ public class Config {
     }
 
     /**
-     * Add a key/value pair to a Config.
-     *
-     * @param key   the key.
-     * @param value the value.
-     */
-    public void addConfig(String key, String value) {
-        this.configMap.put(key, value);
-    }
-
-    /**
      * Given a key, get a value.
      *
      * @param key The key.
@@ -52,9 +38,5 @@ public class Config {
      */
     public String getValue(String key) {
         return this.configMap.get(key);
-    }
-
-    public void deleteKey(String key) {
-        this.configMap.remove(key);
     }
 }

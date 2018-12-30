@@ -1,38 +1,86 @@
 package com.alexlloyd.configservice.dao;
 
 import com.alexlloyd.configservice.api.ConfigDAO;
-import com.alexlloyd.configservice.exception.ConfigAlreadyExistsException;
-import com.alexlloyd.configservice.exception.ConfigDoesNotExistException;
-import com.alexlloyd.configservice.model.Config;
+import com.alexlloyd.configservice.exception.InvalidConfigNameException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 
 /**
  * Access Configs stored in Memory.
  */
 @Repository
 public class ConfigDAOImpl implements ConfigDAO {
-    // TODO: Use persistent storage.
-    private Map<String, Config> configMap = new HashMap<>();
+    private static final String DOMAIN_KEY = "config:";
+
+    private final ZSetOperations<String, String> zSetOps;
+    private final HashOperations<String, Object, Object> hashOps;
+
+    /**
+     * Constructor.
+     *
+     * @param redisTemplate The Redis Template.
+     */
+    @Autowired
+    public ConfigDAOImpl(StringRedisTemplate redisTemplate) {
+        this.zSetOps = redisTemplate.opsForZSet();
+        this.hashOps = redisTemplate.opsForHash();
+    }
+
+    /**
+     * Build the redis key.
+     *
+     * @param configName the name of the config.
+     * @return the Redis key as a byte array.
+     */
+    private String buildKey(String configName) {
+        return DOMAIN_KEY + configName;
+    }
+
+    private long getStringScore(String key) {
+        String string = key.toUpperCase();
+
+        return LongStream.rangeClosed(0, string.length() - 1L)
+                .reduce(0, (acc, value) ->
+                        acc + (string.charAt((int)value) * (long)Math.pow(10, value)));
+    }
+
+    /**
+     * Does a config exist in storage?
+     *
+     * @param configName the name of the config.
+     * @return returns true if the key exists in the config. Else otherwise.
+     */
+    @Override
+    public boolean hasConfig(String configName) {
+        Long hasKey = this.zSetOps.rank(DOMAIN_KEY, configName);
+
+        return hasKey != null && hasKey > -1;
+    }
 
     /**
      * Create a new Config inside the Storage.
      *
      * @param configName The name of the Config. Must be unique.
-     * @throws ConfigAlreadyExistsException if a config with the same name already exists.
-     * @throws NullPointerException         if configName is null.
      */
-    public void createConfig(String configName) throws ConfigAlreadyExistsException {
+    @Override
+    public void createConfig(String configName) {
         if (configName == null) {
-            throw new NullPointerException("Config name is null");
+            throw new InvalidConfigNameException();
         }
 
-        if (this.configMap.containsKey(configName)) {
-            throw new ConfigAlreadyExistsException(configName);
-        }
-        this.configMap.put(configName, new Config());
+        String redisKey = buildKey(configName);
+
+        this.zSetOps.add(DOMAIN_KEY, configName, getStringScore(configName));
+        this.hashOps.putAll(redisKey, Map.of("\0", "\1"));
     }
 
     /**
@@ -40,11 +88,18 @@ public class ConfigDAOImpl implements ConfigDAO {
      *
      * @param configName The name of the Config.
      */
-    public void deleteConfig(String configName) throws ConfigDoesNotExistException {
-        if (!this.configMap.containsKey(configName)) {
-            throw new ConfigDoesNotExistException(configName);
+    @Override
+    public void deleteConfig(String configName) {
+        String redisKey = buildKey(configName);
+
+        Set<Object> hashKeys = this.hashOps.keys(buildKey(configName));
+
+        // If there are any keys in the hash, delete them.
+        if (!hashKeys.isEmpty()) {
+            this.hashOps.delete(redisKey, hashKeys.toArray());
         }
-        this.configMap.remove(configName);
+
+        this.zSetOps.remove(DOMAIN_KEY, configName);
     }
 
     /**
@@ -52,13 +107,15 @@ public class ConfigDAOImpl implements ConfigDAO {
      *
      * @param configName The name of the Config.
      * @return The Config object.
-     * @throws ConfigDoesNotExistException if the config does not exist in storage.
      */
-    public Config getConfig(String configName) throws ConfigDoesNotExistException {
-        if (!this.configMap.containsKey(configName)) {
-            throw new ConfigDoesNotExistException(configName);
-        }
-        return this.configMap.get(configName);
+    @Override
+    public Map<String, String> getConfigMap(String configName) {
+
+        return this.hashOps.entries(buildKey(configName))
+                .entrySet()
+                .stream()
+                .filter(entry -> !entry.getKey().equals("\0"))
+                .collect(Collectors.toMap(e -> (String) e.getKey(), e -> (String) e.getValue()));
     }
 
     /**
@@ -68,7 +125,7 @@ public class ConfigDAOImpl implements ConfigDAO {
      */
     @Override
     public int getConfigCount() {
-        return configMap.size();
+        return this.listConfigs().size();
     }
 
     /**
@@ -76,7 +133,8 @@ public class ConfigDAOImpl implements ConfigDAO {
      */
     @Override
     public void deleteAll() {
-        this.configMap.clear();
+        this.listConfigs()
+                .forEach(this::deleteConfig);
     }
 
     /**
@@ -85,7 +143,17 @@ public class ConfigDAOImpl implements ConfigDAO {
      * @return Map of config name to Config object.
      */
     @Override
-    public Map<String, Config> listConfigs() {
-        return this.configMap;
+    public Collection<String> listConfigs() {
+        return this.zSetOps.range(DOMAIN_KEY, Long.MIN_VALUE, Long.MAX_VALUE);
+    }
+
+    @Override
+    public void deleteValue(String configName, String key) {
+        this.hashOps.delete(buildKey(configName), key);
+    }
+
+    @Override
+    public void updateConfig(String configName, String key, String value) {
+        this.hashOps.put(buildKey(configName), key, value);
     }
 }
