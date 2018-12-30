@@ -21,10 +21,10 @@ script:
   - bash <(curl -s https://codecov.io/bash) -c -F integration
 
 deploy:
+  skip_cleanup: true
   provider: script
   script:
-    cd config-service
-    mvn dockerfile:push
+    mvn -f config-service/pom.xml dockerfile:push
   on:
     branch: master
 
