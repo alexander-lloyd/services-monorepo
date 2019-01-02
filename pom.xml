@@ -31,6 +31,7 @@
 
     <modules>
         <module>config-service</module>
+        <module>tv-guide-service</module>
     </modules>
 
 </project>
