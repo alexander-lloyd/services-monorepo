@@ -2,8 +2,10 @@ package com.alexlloyd.tvguide.models;
 
 import java.time.ZonedDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Programme {
     private String title;
 
@@ -57,5 +59,42 @@ public class Programme {
 
     public void setChannelId(String channelId) {
         this.channelId = channelId;
+    }
+
+    public static class Builder {
+        private Programme programme;
+
+        public Builder() {
+            this.programme = new Programme();
+        }
+
+        public Builder setTitle(String title) {
+            this.programme.setTitle(title);
+            return this;
+        }
+
+        public Builder setDescription(String description) {
+            this.programme.setDescription(description);
+            return this;
+        }
+
+        public Builder setStartTime(ZonedDateTime startTime) {
+            this.programme.setStartTime(startTime);
+            return this;
+        }
+
+        public Builder setStopTime(ZonedDateTime stopTime) {
+            this.programme.setStopTime(stopTime);
+            return this;
+        }
+
+        public Builder setChannelId(String channelId) {
+            this.programme.setChannelId(channelId);
+            return this;
+        }
+
+        public Programme build() {
+            return this.programme;
+        }
     }
 }

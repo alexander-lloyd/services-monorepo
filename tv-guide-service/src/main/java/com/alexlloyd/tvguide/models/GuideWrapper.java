@@ -7,7 +7,14 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 @JacksonXmlRootElement(localName = "tv")
+@SuppressWarnings("unused")
 public class GuideWrapper {
+    @JacksonXmlProperty(localName = "generator-info-name", isAttribute = true)
+    private String generatorInfoName;
+
+    @JacksonXmlProperty(localName = "source-info-name", isAttribute = true)
+    private String sourceInfoName;
+
     private Collection<Channel> channels;
     private Collection<Programme> programmes;
 
