@@ -29,10 +29,10 @@ public class DeserializationTest {
     @Test
     public void testSerializationDeserialization() throws IOException {
         Channel bbc1 = new Channel();
-        bbc1.setId("abc");
+        bbc1.setChannelId("abc");
         bbc1.setName("BBC1");
         Channel itv1 = new Channel();
-        itv1.setId("cde");
+        itv1.setChannelId("cde");
         itv1.setName("ITV1");
 
         Programme sherlock = new Programme();
@@ -56,7 +56,7 @@ public class DeserializationTest {
         assertEquals(1, channels.size());
         assertEquals(1, programmes.size());
 
-        assertEquals("abc", channels.get(0).getId());
+        assertEquals("abc", channels.get(0).getChannelId());
         assertEquals("BBC1", channels.get(0).getName());
 
         assertEquals("Sherlock", programmes.get(0).getTitle());
