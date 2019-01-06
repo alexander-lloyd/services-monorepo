@@ -1,25 +1,47 @@
 package com.alexlloyd.tvguide.models;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
+@Entity
 @JacksonXmlRootElement(localName = "channel")
 public class Channel {
-    @JacksonXmlProperty(isAttribute = true)
-    private String id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonIgnore
+    private Integer id;
+
+    @JacksonXmlProperty(localName = "id", isAttribute = true)
+    private String channelId;
 
     @JacksonXmlProperty(localName = "display-name")
     private String name;
 
     @JacksonXmlProperty(localName = "icon")
+    @OneToOne()
     private ChannelIcon icon;
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getChannelId() {
+        return channelId;
+    }
+
+    public void setChannelId(String channelId) {
+        this.channelId = channelId;
     }
 
     public String getName() {
@@ -46,7 +68,7 @@ public class Channel {
         }
 
         public Builder setId(String id) {
-            this.channel.setId(id);
+            this.channel.setChannelId(id);
             return this;
         }
 
