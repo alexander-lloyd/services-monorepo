@@ -1,4 +1,4 @@
-package com.alexlloyd.configservice.model;
+package com.alexlloyd.response.model;
 
 import java.util.Collections;
 import java.util.Map;

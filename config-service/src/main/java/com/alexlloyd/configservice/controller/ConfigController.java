@@ -6,7 +6,7 @@ import com.alexlloyd.configservice.api.ConfigService;
 import com.alexlloyd.configservice.exception.ConfigAlreadyExistsException;
 import com.alexlloyd.configservice.exception.ConfigDoesNotExistException;
 import com.alexlloyd.configservice.model.Config;
-import com.alexlloyd.configservice.model.DataWrapper;
+import com.alexlloyd.response.model.DataWrapper;
 import com.alexlloyd.response.model.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
