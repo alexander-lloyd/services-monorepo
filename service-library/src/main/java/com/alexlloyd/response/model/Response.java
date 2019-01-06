@@ -17,7 +17,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include;
 public class Response<T> {
     private final ResponseType type;
     private final T data;
-    private final Collection<Exception> errors;
+    private final Collection<ApplicationException> errors;
 
     /**
      * Constructor.
@@ -30,7 +30,7 @@ public class Response<T> {
         this.errors = null;
     }
 
-    private Response(ResponseType type, Collection<Exception> errors) {
+    private Response(ResponseType type, Collection<ApplicationException> errors) {
         this.type = type;
         this.data = null;
         this.errors = errors;
@@ -47,7 +47,7 @@ public class Response<T> {
     }
 
     @JsonGetter(value = "errors")
-    public Collection<Exception> getErrors() {
+    public Collection<ApplicationException> getErrors() {
         return this.errors;
     }
 
@@ -55,11 +55,11 @@ public class Response<T> {
         return new Response<>(ResponseType.SUCCESS, data);
     }
 
-    public static Response<String> error(Collection<Exception> exceptions) {
+    public static Response<String> error(Collection<ApplicationException> exceptions) {
         return new Response<>(ResponseType.ERROR, exceptions);
     }
 
-    public static Response error(Exception exception) {
+    public static Response error(ApplicationException exception) {
         return error(Collections.singleton(exception));
     }
 
