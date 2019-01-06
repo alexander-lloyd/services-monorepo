@@ -1,5 +1,6 @@
 package com.alexlloyd.tvguide.models;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -25,7 +26,7 @@ public class Channel {
     private String name;
 
     @JacksonXmlProperty(localName = "icon")
-    @OneToOne()
+    @OneToOne(cascade = CascadeType.ALL)
     private ChannelIcon icon;
 
     public Integer getId() {

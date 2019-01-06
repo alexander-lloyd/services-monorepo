@@ -47,8 +47,6 @@ public class TvGuideServiceImpl implements TvGuideService {
         String channelId = channel.getChannelId();
         String channelName = channel.getName();
 
-        this.saveChannelIcon(channel.getIcon());
-
         if (this.channelRepository.getChannelByChannelId(channelId) == null) {
             LOGGER.info("Adding new channel \"{}\"", channelName);
             this.channelRepository.save(channel);
@@ -56,11 +54,14 @@ public class TvGuideServiceImpl implements TvGuideService {
             LOGGER.debug("Channel \"{}\" already exists in Database", channelName);
         }
 
-
+        ChannelIcon channelIcon = channel.getIcon();
+        if (channelIcon != null) {
+            this.saveChannelIcon(channelIcon);
+        }
     }
 
     private void saveChannelIcon(ChannelIcon icon) {
-        if (icon != null) {
+        if (this.channelIconRepository.getChannelIconBySrc(icon.getSrc()) == null) {
             LOGGER.info("Adding Channel icon: {}", icon.getSrc());
             this.channelIconRepository.save(icon);
         }
