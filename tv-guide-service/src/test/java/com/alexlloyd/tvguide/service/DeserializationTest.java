@@ -1,4 +1,4 @@
-package com.alexlloyd.tvguide.config;
+package com.alexlloyd.tvguide.service;
 
 import java.io.IOException;
 import java.time.ZoneId;
@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import com.alexlloyd.tvguide.config.JacksonConfig;
 import com.alexlloyd.tvguide.models.Channel;
 import com.alexlloyd.tvguide.models.GuideWrapper;
 import com.alexlloyd.tvguide.models.Programme;
