@@ -30,6 +30,7 @@
     </properties>
 
     <modules>
+        <module>service-library</module>
         <module>config-service</module>
         <module>tv-guide-service</module>
     </modules>
