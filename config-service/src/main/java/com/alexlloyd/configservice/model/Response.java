@@ -3,6 +3,7 @@ package com.alexlloyd.configservice.model;
 import java.util.Collection;
 import java.util.Collections;
 
+import com.alexlloyd.response.model.ResponseType;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
