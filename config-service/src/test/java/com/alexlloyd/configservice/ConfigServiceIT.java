@@ -8,7 +8,7 @@ import com.alexlloyd.configservice.api.ConfigDAO;
 import com.alexlloyd.configservice.api.ConfigService;
 import com.alexlloyd.configservice.exception.ConfigAlreadyExistsException;
 import com.alexlloyd.configservice.exception.ConfigDoesNotExistException;
-import com.alexlloyd.configservice.model.Response;
+import com.alexlloyd.response.model.Response;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;

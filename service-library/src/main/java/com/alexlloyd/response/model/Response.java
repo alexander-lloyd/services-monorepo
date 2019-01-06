@@ -1,9 +1,8 @@
-package com.alexlloyd.configservice.model;
+package com.alexlloyd.response.model;
 
 import java.util.Collection;
 import java.util.Collections;
 
-import com.alexlloyd.response.model.ResponseType;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
