@@ -1,6 +1,7 @@
 package com.alexlloyd.tvguide.service;
 
-import java.util.stream.Stream;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import com.alexlloyd.tvguide.api.TvGuideService;
@@ -18,7 +19,6 @@ import org.springframework.stereotype.Service;
 public class TvGuideServiceImpl implements TvGuideService {
     private static final Logger LOGGER = LoggerFactory.getLogger(TvGuideServiceImpl.class);
 
-
     private final ChannelRepository channelRepository;
     private final ChannelIconRepository channelIconRepository;
 
@@ -29,10 +29,11 @@ public class TvGuideServiceImpl implements TvGuideService {
     }
 
     @Override
-    public Stream<Channel> getChannels() {
+    public List<Channel> getChannels() {
         Iterable<Channel> channelIterable = this.channelRepository.findAll();
 
-        return StreamSupport.stream(channelIterable.spliterator(), false);
+        return StreamSupport.stream(channelIterable.spliterator(), false)
+                .collect(Collectors.toList());
     }
 
     @Override

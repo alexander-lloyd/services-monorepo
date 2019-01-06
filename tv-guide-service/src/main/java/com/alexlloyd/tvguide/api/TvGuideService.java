@@ -1,12 +1,12 @@
 package com.alexlloyd.tvguide.api;
 
-import java.util.stream.Stream;
+import java.util.List;
 
 import com.alexlloyd.tvguide.models.Channel;
 import com.alexlloyd.tvguide.models.GuideWrapper;
 
 public interface TvGuideService {
-    Stream<Channel> getChannels();
+    List<Channel> getChannels();
 
     void saveTvGuide(GuideWrapper guideWrapper);
 }
