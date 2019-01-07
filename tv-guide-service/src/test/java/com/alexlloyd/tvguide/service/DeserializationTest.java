@@ -9,8 +9,11 @@ import java.util.Set;
 
 import com.alexlloyd.tvguide.config.JacksonConfig;
 import com.alexlloyd.tvguide.models.Channel;
-import com.alexlloyd.tvguide.models.GuideWrapper;
+import com.alexlloyd.tvguide.models.xmltv.GuideWrapper;
 import com.alexlloyd.tvguide.models.Programme;
+import com.alexlloyd.tvguide.models.xmltv.XmlTvChannel;
+import com.alexlloyd.tvguide.models.xmltv.XmlTvChannelIcon;
+import com.alexlloyd.tvguide.models.xmltv.XmlTvProgramme;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,19 +32,21 @@ public class DeserializationTest {
 
     @Test
     public void testSerializationDeserialization() throws IOException {
-        Channel bbc1 = new Channel();
-        bbc1.setChannelId("abc");
-        bbc1.setName("BBC1");
-        Channel itv1 = new Channel();
-        itv1.setChannelId("cde");
-        itv1.setName("ITV1");
+        XmlTvChannelIcon bbc1icon = new XmlTvChannelIcon();
+        bbc1icon.setSrc("abc");
 
-        Programme sherlock = new Programme();
-        sherlock.setStartTime(ZonedDateTime.of(2019, 1, 1, 20, 30, 0, 0, ZoneId.of("UTC")));
-        sherlock.setStopTime(ZonedDateTime.of(2019, 1, 1, 22, 0, 0, 0, ZoneId.of("UTC")));
-        sherlock.setDescription("Benedict Cumberbatch");
-        sherlock.setTitle("Sherlock");
-        sherlock.setChannelId("abc");
+        XmlTvChannel bbc1 = new XmlTvChannel.Builder()
+                .setIcon(bbc1icon)
+                .setName("BBC1")
+                .build();
+
+        XmlTvProgramme sherlock = new XmlTvProgramme.Builder()
+                .setStartTime(ZonedDateTime.of(2019, 1, 1, 20, 30, 0, 0, ZoneId.of("UTC")))
+                .setStopTime(ZonedDateTime.of(2019, 1, 1, 22, 0, 0, 0, ZoneId.of("UTC")))
+                .setTitle("Sherlock")
+                .setDescription("Benedict Cumberbatch")
+                .setChannelId("abc")
+                .build();
 
         GuideWrapper guideWrapper = new GuideWrapper();
         guideWrapper.setProgrammes(Set.of(sherlock));
@@ -51,13 +56,12 @@ public class DeserializationTest {
 
         GuideWrapper wrapper = xmlMapper.readValue(serialized, GuideWrapper.class);
 
-        List<Channel> channels = new LinkedList<>(wrapper.getChannels());
-        List<Programme> programmes = new LinkedList<>(wrapper.getProgrammes());
+        List<XmlTvChannel> channels = new LinkedList<>(wrapper.getChannels());
+        List<XmlTvProgramme> programmes = new LinkedList<>(wrapper.getProgrammes());
 
         assertEquals(1, channels.size());
         assertEquals(1, programmes.size());
 
-        assertEquals("abc", channels.get(0).getChannelId());
         assertEquals("BBC1", channels.get(0).getName());
 
         assertEquals("Sherlock", programmes.get(0).getTitle());

@@ -7,25 +7,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-
 @Entity
-@JacksonXmlRootElement(localName = "channel")
 public class Channel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @JsonIgnore
     private Integer id;
 
-    @JacksonXmlProperty(localName = "id", isAttribute = true)
     private String channelId;
 
-    @JacksonXmlProperty(localName = "display-name")
     private String name;
 
-    @JacksonXmlProperty(localName = "icon")
     @OneToOne(cascade = CascadeType.ALL)
     private ChannelIcon icon;
 
@@ -68,7 +59,7 @@ public class Channel {
             this.channel = new Channel();
         }
 
-        public Builder setId(String id) {
+        public Builder setChannelId(String id) {
             this.channel.setChannelId(id);
             return this;
         }

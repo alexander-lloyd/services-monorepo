@@ -1,16 +1,24 @@
-package com.alexlloyd.tvguide.models;
+package com.alexlloyd.tvguide.models.xmltv;
 
 import java.time.ZonedDateTime;
 
-public class Programme {
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class XmlTvProgramme {
     private String title;
 
+    @JacksonXmlProperty(localName = "desc")
     private String description;
 
+    @JacksonXmlProperty(localName = "start", isAttribute = true)
     private ZonedDateTime startTime;
 
+    @JacksonXmlProperty(localName = "stop", isAttribute = true)
     private ZonedDateTime stopTime;
 
+    @JacksonXmlProperty(localName = "channel", isAttribute = true)
     private String channelId;
 
     public String getTitle() {
@@ -54,10 +62,10 @@ public class Programme {
     }
 
     public static class Builder {
-        private Programme programme;
+        private XmlTvProgramme programme;
 
         public Builder() {
-            this.programme = new Programme();
+            this.programme = new XmlTvProgramme();
         }
 
         public Builder setTitle(String title) {
@@ -85,7 +93,7 @@ public class Programme {
             return this;
         }
 
-        public Programme build() {
+        public XmlTvProgramme build() {
             return this.programme;
         }
     }

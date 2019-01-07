@@ -4,8 +4,10 @@ import java.util.Set;
 
 import com.alexlloyd.tvguide.api.TvGuideService;
 import com.alexlloyd.tvguide.models.Channel;
-import com.alexlloyd.tvguide.models.GuideWrapper;
+import com.alexlloyd.tvguide.models.xmltv.GuideWrapper;
 import com.alexlloyd.tvguide.models.Programme;
+import com.alexlloyd.tvguide.models.xmltv.XmlTvChannel;
+import com.alexlloyd.tvguide.models.xmltv.XmlTvProgramme;
 import com.alexlloyd.tvguide.task.TvGuideTask;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,12 +42,12 @@ public class XmlTvGuideServiceTest {
 
     @Test
     public void testGetTvGuide() {
-        Programme programme = new Programme.Builder()
+        XmlTvProgramme programme = new XmlTvProgramme.Builder()
                 .setChannelId("def")
                 .setTitle("Programme Name")
                 .setDescription("Programme Description")
                 .build();
-        Channel channel = new Channel.Builder()
+        XmlTvChannel channel = new XmlTvChannel.Builder()
                 .setId("abc")
                 .setName("Channel Name")
                 .build();

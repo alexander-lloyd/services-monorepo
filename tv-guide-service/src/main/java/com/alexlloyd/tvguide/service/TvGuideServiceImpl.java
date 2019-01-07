@@ -5,9 +5,10 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import com.alexlloyd.tvguide.api.TvGuideService;
+import com.alexlloyd.tvguide.mapper.ChannelMapper;
 import com.alexlloyd.tvguide.models.Channel;
 import com.alexlloyd.tvguide.models.ChannelIcon;
-import com.alexlloyd.tvguide.models.GuideWrapper;
+import com.alexlloyd.tvguide.models.xmltv.GuideWrapper;
 import com.alexlloyd.tvguide.repository.ChannelIconRepository;
 import com.alexlloyd.tvguide.repository.ChannelRepository;
 import org.slf4j.Logger;
@@ -21,11 +22,13 @@ public class TvGuideServiceImpl implements TvGuideService {
 
     private final ChannelRepository channelRepository;
     private final ChannelIconRepository channelIconRepository;
+    private final ChannelMapper channelMapper;
 
     @Autowired
-    public TvGuideServiceImpl(ChannelRepository channelRepository, ChannelIconRepository channelIconRepository) {
+    public TvGuideServiceImpl(ChannelRepository channelRepository, ChannelIconRepository channelIconRepository, ChannelMapper channelMapper) {
         this.channelRepository = channelRepository;
         this.channelIconRepository = channelIconRepository;
+        this.channelMapper = channelMapper;
     }
 
     @Override
@@ -40,6 +43,8 @@ public class TvGuideServiceImpl implements TvGuideService {
     public void saveTvGuide(GuideWrapper guideWrapper) {
         guideWrapper
                 .getChannels()
+                .stream()
+                .map(this.channelMapper::mapToChannel)
                 .forEach(this::saveChannel);
     }
 

@@ -1,4 +1,4 @@
-package com.alexlloyd.tvguide.models;
+package com.alexlloyd.tvguide.models.xmltv;
 
 import java.util.Collection;
 
@@ -15,26 +15,26 @@ public class GuideWrapper {
     @JacksonXmlProperty(localName = "source-info-name", isAttribute = true)
     private String sourceInfoName;
 
-    private Collection<Channel> channels;
-    private Collection<Programme> programmes;
+    private Collection<XmlTvChannel> channels;
+    private Collection<XmlTvProgramme> programmes;
 
     @JacksonXmlElementWrapper(useWrapping = false)
     @JacksonXmlProperty(localName = "channel")
-    public Collection<Channel> getChannels() {
+    public Collection<XmlTvChannel> getChannels() {
         return this.channels;
     }
 
-    public void setChannels(Collection<Channel> channels) {
+    public void setChannels(Collection<XmlTvChannel> channels) {
         this.channels = channels;
     }
 
     @JacksonXmlElementWrapper(useWrapping = false)
     @JacksonXmlProperty(localName = "programme")
-    public Collection<Programme> getProgrammes() {
+    public Collection<XmlTvProgramme> getProgrammes() {
         return this.programmes;
     }
 
-    public void setProgrammes(Collection<Programme> programmes) {
+    public void setProgrammes(Collection<XmlTvProgramme> programmes) {
         this.programmes = programmes;
     }
 }

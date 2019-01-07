@@ -1,7 +1,7 @@
 package com.alexlloyd.tvguide.task;
 
 import com.alexlloyd.tvguide.api.TvGuideService;
-import com.alexlloyd.tvguide.models.GuideWrapper;
+import com.alexlloyd.tvguide.models.xmltv.GuideWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
