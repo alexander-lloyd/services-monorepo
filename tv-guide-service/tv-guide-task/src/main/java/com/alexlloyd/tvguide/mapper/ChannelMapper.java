@@ -10,8 +10,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class ChannelMapper {
+    private final ChannelIconMapper channelIconMapper;
+
     @Autowired
-    private ChannelIconMapper channelIconMapper;
+    public ChannelMapper(ChannelIconMapper channelIconMapper) {
+        this.channelIconMapper = channelIconMapper;
+    }
 
     public Channel mapToChannel(XmlTvChannel xmlTvChannel) {
         return new Channel.Builder()
