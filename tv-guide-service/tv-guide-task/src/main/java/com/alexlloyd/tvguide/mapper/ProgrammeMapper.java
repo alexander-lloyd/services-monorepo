@@ -7,6 +7,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProgrammeMapper {
     public Programme mapToProgramme(XmlTvProgramme xmlTvProgramme) {
+        if (xmlTvProgramme == null) {
+            return null;
+        }
+
         return new Programme.Builder()
                 .setChannelId(xmlTvProgramme.getChannelId())
                 .setTitle(xmlTvProgramme.getTitle())

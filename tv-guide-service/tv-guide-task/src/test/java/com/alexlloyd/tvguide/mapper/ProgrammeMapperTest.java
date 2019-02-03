@@ -8,11 +8,12 @@ import com.alexlloyd.tvguide.model.XmlTvProgramme;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class ProgrammeMapperTest {
     @Test
-    public void testProgrammeMapperNull() {
+    public void testProgrammeMapperEmpty() {
         ProgrammeMapper mapper = new ProgrammeMapper();
 
         XmlTvProgramme xmlProgramme = new XmlTvProgramme.Builder()
@@ -50,5 +51,14 @@ public class ProgrammeMapperTest {
         assertEquals(desc, programme.getDescription());
         assertEquals(startTime, programme.getStartTime());
         assertEquals(stopTime, programme.getStopTime());
+    }
+
+    @Test
+    public void testProgrammerMapperNull() {
+        ProgrammeMapper mapper = new ProgrammeMapper();
+        XmlTvProgramme xmlProgramme = null;
+
+        Programme programme = mapper.mapToProgramme(xmlProgramme);
+        assertNull(programme);
     }
 }
