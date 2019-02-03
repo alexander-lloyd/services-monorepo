@@ -30,7 +30,7 @@ import static org.mockito.Mockito.verify;
 
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class)
 @ExtendWith(SpringExtension.class)
-public class XmlTvGuideServiceTest {
+public class TvGuideServiceComponentTest {
 
     @Autowired
     private RestTemplate restTemplate;

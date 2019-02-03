@@ -1,9 +1,7 @@
 package com.alexlloyd.tvguide.mapper;
 
 import com.alexlloyd.tvguide.model.ChannelIcon;
-import com.alexlloyd.tvguide.model.Programme;
 import com.alexlloyd.tvguide.model.XmlTvChannelIcon;
-import com.alexlloyd.tvguide.model.XmlTvProgramme;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
