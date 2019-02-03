@@ -41,12 +41,6 @@ public class TvGuideServiceComponentTest {
     @Autowired
     private TvGuideTask tvGuideTask;
 
-    @Autowired
-    private ChannelMapper channelMapper;
-
-    @Autowired
-    private ProgrammeMapperTest programmeMapper;
-
     @Test
     public void testGetTvGuide() {
         XmlTvProgramme xmlProgramme = new XmlTvProgramme.Builder()

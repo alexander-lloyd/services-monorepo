@@ -2,6 +2,7 @@ package com.alexlloyd.tvguide.controller;
 
 import java.util.Collection;
 
+import com.alexlloyd.response.model.DataWrapper;
 import com.alexlloyd.response.model.Response;
 import com.alexlloyd.tvguide.api.TvGuideService;
 import com.alexlloyd.tvguide.model.Channel;
@@ -23,7 +24,7 @@ public class TVChannelController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public Response<Collection<Channel>> channelList() {
-        return Response.success(this.tvGuideService.getChannels());
+    public Response<DataWrapper<Collection<Channel>>> channelList() {
+        return Response.success(new DataWrapper<>("channels", this.tvGuideService.getChannels()));
     }
 }
