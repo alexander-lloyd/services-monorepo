@@ -18,6 +18,10 @@ public class ChannelMapper {
     }
 
     public Channel mapToChannel(XmlTvChannel xmlTvChannel) {
+        if (xmlTvChannel == null) {
+            return null;
+        }
+
         return new Channel.Builder()
                 .setName(xmlTvChannel.getName())
                 .setChannelId(xmlTvChannel.getChannelId())

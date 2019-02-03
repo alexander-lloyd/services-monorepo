@@ -6,7 +6,6 @@ import com.alexlloyd.tvguide.model.XmlTvChannelIcon;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -14,7 +13,7 @@ import static org.mockito.Mockito.verify;
 
 public class ChannelMapperTest {
     @Test
-    public void testChannelMapperNull() {
+    public void testChannelMapperEmpty() {
         ChannelIconMapper channelIconMapper = mock(ChannelIconMapper.class);
         ChannelMapper mapper = new ChannelMapper(channelIconMapper);
 
@@ -49,5 +48,16 @@ public class ChannelMapperTest {
         assertNull(channel.getIcon());
 
         verify(channelIconMapper).mapToChannelIcon(eq(channelIcon));
+    }
+
+    @Test
+    public void testChannelMapperNull() {
+        ChannelIconMapper channelIconMapper = mock(ChannelIconMapper.class);
+        ChannelMapper mapper = new ChannelMapper(channelIconMapper);
+
+        XmlTvChannel xmlChannel = null;
+
+        Channel channel = mapper.mapToChannel(xmlChannel);
+        assertNull(channel);
     }
 }
