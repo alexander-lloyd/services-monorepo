@@ -11,7 +11,7 @@
         <dep.hamcrest.version>2.1</dep.hamcrest.version>
         <dep.junit.version>5.3.2</dep.junit.version>
         <dep.mockito.version>2.24.0</dep.mockito.version>
-        <dep.spring.version>5.1.4.RELEASE</dep.spring.version>
+        <dep.spring.version>5.1.5.RELEASE</dep.spring.version>
         <dep.spring-boot.version>2.1.2.RELEASE</dep.spring-boot.version>
         <dep.spring-data.version>1.0.3.RELEASE</dep.spring-data.version>
         <dep.testcontainers.version>1.10.6</dep.testcontainers.version>
