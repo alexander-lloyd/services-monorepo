@@ -14,7 +14,7 @@
         <dep.spring.version>5.1.6.RELEASE</dep.spring.version>
         <dep.spring-boot.version>2.1.3.RELEASE</dep.spring-boot.version>
         <dep.spring-data.version>1.0.3.RELEASE</dep.spring-data.version>
-        <dep.testcontainers.version>1.11.0</dep.testcontainers.version>
+        <dep.testcontainers.version>1.11.1</dep.testcontainers.version>
 
         <docker.image.prefix>alexanderlloyd</docker.image.prefix>
 
