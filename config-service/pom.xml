@@ -9,7 +9,7 @@
 
     <properties>
         <dep.hamcrest.version>2.1</dep.hamcrest.version>
-        <dep.junit.version>5.3.2</dep.junit.version>
+        <dep.junit.version>5.4.2</dep.junit.version>
         <dep.mockito.version>2.27.0</dep.mockito.version>
         <dep.spring.version>5.1.6.RELEASE</dep.spring.version>
         <dep.spring-boot.version>2.1.4.RELEASE</dep.spring-boot.version>
