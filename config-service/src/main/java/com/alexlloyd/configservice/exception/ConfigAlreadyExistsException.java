@@ -1,5 +1,6 @@
 package com.alexlloyd.configservice.exception;
 
+import com.alexlloyd.response.model.ApplicationException;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -9,7 +10,7 @@ import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
  * Exception thrown if a configName has already been used.
  */
 @JsonAutoDetect(fieldVisibility = NONE, getterVisibility = NONE, setterVisibility = NONE)
-public class ConfigAlreadyExistsException extends Exception {
+public class ConfigAlreadyExistsException extends ApplicationException {
     private final String reason;
 
     /**

@@ -1,4 +1,4 @@
-package com.alexlloyd.configservice.model;
+package com.alexlloyd.response.model;
 
 /**
  * The type of responses that we can have.
