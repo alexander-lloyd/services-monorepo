@@ -12,7 +12,7 @@
         <dep.junit.version>5.6.0</dep.junit.version>
         <dep.mockito.version>3.2.4</dep.mockito.version>
         <dep.spring.version>5.1.9.RELEASE</dep.spring.version>
-        <dep.spring-boot.version>2.2.0.RELEASE</dep.spring-boot.version>
+        <dep.spring-boot.version>2.2.2.RELEASE</dep.spring-boot.version>
         <dep.spring-data.version>1.0.3.RELEASE</dep.spring-data.version>
         <dep.testcontainers.version>1.13.0</dep.testcontainers.version>
 
